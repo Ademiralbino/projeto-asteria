@@ -56,3 +56,6 @@ application-dev.yml
 
 # Arquivos temporários
 *.tmp
+
+# Configuração local
+src/main/resources/application-local.yml

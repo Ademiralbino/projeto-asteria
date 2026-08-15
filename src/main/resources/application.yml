@@ -1,8 +1,9 @@
 spring:
+  profiles:
+    active: local
+
   datasource:
     url: jdbc:postgresql://localhost:5432/asteria
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
