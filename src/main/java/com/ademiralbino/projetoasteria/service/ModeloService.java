@@ -5,6 +5,7 @@ import com.ademiralbino.projetoasteria.dto.ModeloResponse;
 import com.ademiralbino.projetoasteria.entity.Booker;
 import com.ademiralbino.projetoasteria.entity.Modelo;
 import com.ademiralbino.projetoasteria.entity.Scouter;
+import com.ademiralbino.projetoasteria.exception.RecursoNaoEncontradoException;
 import com.ademiralbino.projetoasteria.repository.BookerRepository;
 import com.ademiralbino.projetoasteria.repository.ModeloRepository;
 import com.ademiralbino.projetoasteria.repository.ScouterRepository;
@@ -36,7 +37,7 @@ public class ModeloService {
     public ModeloResponse criar(ModeloRequest request) {
 
         Booker booker = bookerRepository.findById(request.bookerId())
-                .orElseThrow(() -> new IllegalArgumentException("Booker não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
 
         Scouter scouter = null;
 
@@ -79,7 +80,7 @@ public class ModeloService {
     @Transactional(readOnly = true)
     public ModeloResponse buscarPorId(UUID id) {
         Modelo modelo = modeloRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Modelo não encontrada."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Modelo não encontrada."));
 
         return toResponse(modelo);
     }
@@ -88,16 +89,16 @@ public class ModeloService {
     public ModeloResponse atualizar(UUID id, ModeloRequest request) {
 
         Modelo modelo = modeloRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Modelo não encontrada."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Modelo não encontrada."));
 
         Booker booker = bookerRepository.findById(request.bookerId())
-                .orElseThrow(() -> new IllegalArgumentException("Booker não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
 
         Scouter scouter = null;
 
         if (request.scouterId() != null) {
             scouter = scouterRepository.findById(request.scouterId())
-                    .orElseThrow(() -> new IllegalArgumentException("Scouter não encontrado."));
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Scouter não encontrado."));
         }
 
         modelo.setNome(request.nome());
@@ -118,7 +119,7 @@ public class ModeloService {
     public void excluir(UUID id) {
 
         if (!modeloRepository.existsById(id)) {
-            throw new IllegalArgumentException("Modelo não encontrada.");
+            throw new RecursoNaoEncontradoException("Modelo não encontrada.");
         }
 
         modeloRepository.deleteById(id);

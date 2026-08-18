@@ -25,21 +25,30 @@ public class ModeloController {
     public ResponseEntity<ModeloResponse> criar(
             @Valid @RequestBody ModeloRequest request
     ) {
+
+        ModeloResponse response = modeloService.criar(request);
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(modeloService.criar(request));
+                .body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<ModeloResponse>> listar() {
-        return ResponseEntity.ok(modeloService.listar());
+
+        return ResponseEntity.ok(
+                modeloService.listar()
+        );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ModeloResponse> buscarPorId(
             @PathVariable UUID id
     ) {
-        return ResponseEntity.ok(modeloService.buscarPorId(id));
+
+        return ResponseEntity.ok(
+                modeloService.buscarPorId(id)
+        );
     }
 
     @PutMapping("/{id}")
@@ -47,14 +56,19 @@ public class ModeloController {
             @PathVariable UUID id,
             @Valid @RequestBody ModeloRequest request
     ) {
-        return ResponseEntity.ok(modeloService.atualizar(id, request));
+
+        return ResponseEntity.ok(
+                modeloService.atualizar(id, request)
+        );
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
             @PathVariable UUID id
     ) {
+
         modeloService.excluir(id);
+
         return ResponseEntity.noContent().build();
     }
 }

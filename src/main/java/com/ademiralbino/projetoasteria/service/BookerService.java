@@ -1,4 +1,5 @@
 package com.ademiralbino.projetoasteria.service;
+import com.ademiralbino.projetoasteria.exception.RecursoNaoEncontradoException;
 
 import com.ademiralbino.projetoasteria.entity.Booker;
 import com.ademiralbino.projetoasteria.repository.BookerRepository;
@@ -30,14 +31,14 @@ public class BookerService {
     @Transactional(readOnly = true)
     public Booker buscarPorId(UUID id) {
         return bookerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Booker não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
     }
 
     @Transactional
     public Booker atualizar(UUID id, Booker dados) {
 
         Booker booker = bookerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Booker não encontrado."));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
 
         booker.setNome(dados.getNome());
         booker.setTelefone(dados.getTelefone());
@@ -50,7 +51,7 @@ public class BookerService {
     public void excluir(UUID id) {
 
         if (!bookerRepository.existsById(id)) {
-            throw new IllegalArgumentException("Booker não encontrado.");
+            throw new RecursoNaoEncontradoException("Booker não encontrado.");
         }
 
         bookerRepository.deleteById(id);
