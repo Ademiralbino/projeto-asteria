@@ -126,7 +126,9 @@ public class ModeloService {
         modelo.setEmail(request.email());
         modelo.setFoto(request.foto());
 
-        return toResponse(modeloRepository.save(modelo));
+        Modelo modeloSalvo = modeloRepository.saveAndFlush(modelo);
+
+        return toResponse(modeloSalvo);
     }
 
     @Transactional
