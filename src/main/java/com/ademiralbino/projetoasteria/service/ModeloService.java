@@ -37,13 +37,17 @@ public class ModeloService {
     public ModeloResponse criar(ModeloRequest request) {
 
         Booker booker = bookerRepository.findById(request.bookerId())
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Booker não encontrado.")
+                );
 
         Scouter scouter = null;
 
         if (request.scouterId() != null) {
             scouter = scouterRepository.findById(request.scouterId())
-                    .orElseThrow(() -> new IllegalArgumentException("Scouter não encontrado."));
+                    .orElseThrow(() ->
+                            new RecursoNaoEncontradoException("Scouter não encontrado.")
+                    );
         }
 
         Modelo modelo = Modelo.builder()
@@ -71,6 +75,7 @@ public class ModeloService {
 
     @Transactional(readOnly = true)
     public List<ModeloResponse> listar() {
+
         return modeloRepository.findAll()
                 .stream()
                 .map(this::toResponse)
@@ -79,8 +84,11 @@ public class ModeloService {
 
     @Transactional(readOnly = true)
     public ModeloResponse buscarPorId(UUID id) {
+
         Modelo modelo = modeloRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Modelo não encontrada."));
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Modelo não encontrada.")
+                );
 
         return toResponse(modelo);
     }
@@ -89,16 +97,22 @@ public class ModeloService {
     public ModeloResponse atualizar(UUID id, ModeloRequest request) {
 
         Modelo modelo = modeloRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Modelo não encontrada."));
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Modelo não encontrada.")
+                );
 
         Booker booker = bookerRepository.findById(request.bookerId())
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Booker não encontrado.")
+                );
 
         Scouter scouter = null;
 
         if (request.scouterId() != null) {
             scouter = scouterRepository.findById(request.scouterId())
-                    .orElseThrow(() -> new RecursoNaoEncontradoException("Scouter não encontrado."));
+                    .orElseThrow(() ->
+                            new RecursoNaoEncontradoException("Scouter não encontrado.")
+                    );
         }
 
         modelo.setNome(request.nome());

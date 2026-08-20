@@ -1,7 +1,9 @@
 package com.ademiralbino.projetoasteria.controller;
 
-import com.ademiralbino.projetoasteria.entity.Booker;
+import com.ademiralbino.projetoasteria.dto.BookerRequest;
+import com.ademiralbino.projetoasteria.dto.BookerResponse;
 import com.ademiralbino.projetoasteria.service.BookerService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,31 +21,28 @@ public class BookerController {
         this.bookerService = bookerService;
     }
 
-
     @PostMapping
-    public ResponseEntity<Booker> criar(
-            @RequestBody Booker booker
+    public ResponseEntity<BookerResponse> criar(
+            @Valid @RequestBody BookerRequest request
     ) {
 
-        Booker salvo = bookerService.criar(booker);
+        BookerResponse response = bookerService.criar(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(salvo);
+                .body(response);
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Booker>> listar() {
+    public ResponseEntity<List<BookerResponse>> listar() {
 
         return ResponseEntity.ok(
                 bookerService.listar()
         );
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<Booker> buscarPorId(
+    public ResponseEntity<BookerResponse> buscarPorId(
             @PathVariable UUID id
     ) {
 
@@ -52,18 +51,16 @@ public class BookerController {
         );
     }
 
-
     @PutMapping("/{id}")
-    public ResponseEntity<Booker> atualizar(
+    public ResponseEntity<BookerResponse> atualizar(
             @PathVariable UUID id,
-            @RequestBody Booker booker
+            @Valid @RequestBody BookerRequest request
     ) {
 
         return ResponseEntity.ok(
-                bookerService.atualizar(id, booker)
+                bookerService.atualizar(id, request)
         );
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(

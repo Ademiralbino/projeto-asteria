@@ -1,11 +1,13 @@
 package com.ademiralbino.projetoasteria.service;
-import com.ademiralbino.projetoasteria.exception.RecursoNaoEncontradoException;
 
+import com.ademiralbino.projetoasteria.dto.BookerRequest;
+import com.ademiralbino.projetoasteria.dto.BookerResponse;
 import com.ademiralbino.projetoasteria.entity.Booker;
 import com.ademiralbino.projetoasteria.repository.BookerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ademiralbino.projetoasteria.exception.RecursoNaoEncontradoException;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,32 +21,54 @@ public class BookerService {
     }
 
     @Transactional
-    public Booker criar(Booker booker) {
-        return bookerRepository.save(booker);
+    public BookerResponse criar(BookerRequest request) {
+
+        Booker booker = Booker.builder()
+                .nome(request.nome())
+                .telefone(request.telefone())
+                .email(request.email())
+                .build();
+
+        Booker bookerSalvo = bookerRepository.saveAndFlush(booker);
+
+        return toResponse(bookerSalvo);
     }
 
     @Transactional(readOnly = true)
-    public List<Booker> listar() {
-        return bookerRepository.findAll();
+    public List<BookerResponse> listar() {
+
+        return bookerRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
-    public Booker buscarPorId(UUID id) {
-        return bookerRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
+    public BookerResponse buscarPorId(UUID id) {
+
+        Booker booker = bookerRepository.findById(id)
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Booker não encontrado.")
+                );
+
+        return toResponse(booker);
     }
 
     @Transactional
-    public Booker atualizar(UUID id, Booker dados) {
+    public BookerResponse atualizar(UUID id, BookerRequest request) {
 
         Booker booker = bookerRepository.findById(id)
-                .orElseThrow(() -> new RecursoNaoEncontradoException("Booker não encontrado."));
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Booker não encontrado.")
+                );
 
-        booker.setNome(dados.getNome());
-        booker.setTelefone(dados.getTelefone());
-        booker.setEmail(dados.getEmail());
+        booker.setNome(request.nome());
+        booker.setTelefone(request.telefone());
+        booker.setEmail(request.email());
 
-        return bookerRepository.save(booker);
+        Booker bookerSalvo = bookerRepository.saveAndFlush(booker);
+
+        return toResponse(bookerSalvo);
     }
 
     @Transactional
@@ -55,5 +79,17 @@ public class BookerService {
         }
 
         bookerRepository.deleteById(id);
+    }
+
+    private BookerResponse toResponse(Booker booker) {
+
+        return new BookerResponse(
+                booker.getId(),
+                booker.getNome(),
+                booker.getTelefone(),
+                booker.getEmail(),
+                booker.getCriadoEm(),
+                booker.getAtualizadoEm()
+        );
     }
 }

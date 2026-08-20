@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,5 +33,10 @@ public abstract class BaseEntity {
         LocalDateTime agora = LocalDateTime.now();
         this.criadoEm = agora;
         this.atualizadoEm = agora;
+    }
+
+    @PreUpdate
+    protected void atualizarTimestamp() {
+        this.atualizadoEm = LocalDateTime.now();
     }
 }
